@@ -50,6 +50,10 @@ Traversal = collections.namedtuple("Traversal", ["nets", "pins"])
 
 
 class Net(SkidlBaseObject):
+    pins:['Pin']
+    circuit:'Circuit'
+    name:str
+
     """
     Lists of connected pins are stored as nets using this class.
 

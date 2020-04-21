@@ -43,6 +43,11 @@ standard_library.install_aliases()
 
 
 class Pin(SkidlBaseObject):
+    nets: ['Net']
+    part: 'Part'
+    name: str
+    num: str
+
     """
     A class for storing data about pins for a part.
 
@@ -366,6 +371,17 @@ class Pin(SkidlBaseObject):
         # You can only iterate a Pin one time.
         return (self for i in [0])  # Return generator expr.
 
+    @property
+    def ref(self):
+        """
+        Get, set and delete the part reference.
+
+        When setting the part reference, if another part with the same
+        reference is found, the reference for this part is adjusted to make
+        it unique.
+        """
+        return self.part.ref+":"+self.num
+
     def is_connected(self):
         """Return true if a pin is connected to a net (but not a no-connect net)."""
 
@@ -563,7 +579,7 @@ class Pin(SkidlBaseObject):
         else:
             erc_logger.error(msg)
 
-    def erc_desc(self):
+    def erc_desc(self) -> str:
         """Return a string describing this pin for ERC."""
         desc = "{func} pin {num}/{name} of {part}".format(
             part=self.part.erc_desc(),
